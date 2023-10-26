@@ -113,6 +113,7 @@ private:
     std::string name;
 
 public:
+    Author () {}
     Author(const std::string& name) : name(name) {}
 
     void print() const {
