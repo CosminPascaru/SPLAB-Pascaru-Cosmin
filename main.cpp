@@ -5,6 +5,10 @@
 class Element {
 public:
     virtual void print() const = 0;
+
+    virtual void add(Element*) = 0;
+    virtual void remove(Element*) = 0;
+    virtual Element* get(const size_t) const = 0;
 };
 
 class Table: public Element {
@@ -18,18 +22,9 @@ public:
         std::cout << "    Table: " << title << '\n';
     }
 
-};
-
-class Paragraph: public Element {
-private:
-    std::string text;
-
-public:
-    Paragraph(const std::string& text) : text(text) {}
-
-    void print() const {
-        std::cout << "    Paragraph: " << text << '\n';
-    }
+    void add(Element*) {}
+    void remove(Element*) {}
+    Element* get(const size_t) {}
 
 };
 
@@ -44,69 +39,89 @@ public:
         std::cout << "    Image: " << imageName << '\n';
     }
 
+    void add(Element*) {}
+    void remove(Element*) {}
+    Element* get(const size_t) {}
+
 };
 
-class SubChapter {
+class Paragraph: public Element {
 private:
-    std::string name;
-    std::vector<Element*> elements;
+    std::string text;
 
 public:
-    SubChapter(const std::string& name) : name(name) {}
+    Paragraph(const std::string& text) : text(text) {}
 
-    ~SubChapter() {
-        for (Element* element : elements)
+    void print() const {
+        std::cout << "    Paragraph: " << text << '\n';
+    }
+
+    void add(Element*) {}
+    void remove(Element*) {}
+    Element* get(const size_t) {}
+
+};
+
+class TableofContent: public Element {
+private:
+    std::string something;
+
+public:
+    void print() const {
+        std::cout << "Table of Content: " << something << '\n';
+    }
+
+    void add(Element*) {}
+    void remove(Element*) {}
+    Element* get(const size_t) {}
+
+};
+
+class Section: public Element {
+private:
+    std::string title;
+    std::vector<Element*> children;
+
+public:
+    Section(const std::string& title) :title(title) {}
+
+    ~Section() {        
+        for (Element* element : children)
             delete element;
     }
 
-    void createImage(const std::string& imageName) {
-        Image* image = new Image(imageName);
-        elements.push_back(image);
-    }
-
-    void createParagraph(const std::string& text) {
-        Paragraph* paragraph = new Paragraph(text);
-        elements.push_back(paragraph);
-    }
-
-    void createTable(const std::string& title) {
-        Table* table = new Table(title);
-        elements.push_back(table);
-    }
-
     void print() const {
-        std::cout << "  Subchapter: " << name << '\n';
-        for (const Element* element : elements)
-            if (element)
-                element->print();
+            std::cout << "Section: " << title << '\n';
+            
+            for (const Element* element : children) {
+                if(element){
+                    element->print();
+                }
+            }
+        }
+
+    void add(Element* element){
+        if(element){
+            children.push_back(element);
+        }
     }
 
-};
-
-class Chapter {
-private:
-    std::string name;
-    std::vector<SubChapter> subchapters;
-
-public:
-    Chapter(const std::string& name) : name(name) {}
-
-    void createSubchapter(const std::string& subchapter_name) {
-        SubChapter subchapter(subchapter_name);
-        subchapters.push_back(subchapter);
+    void remove(Element* elem_delete){
+        size_t iter = 0; 
+        for (Element* element : children) {
+            if(element == elem_delete){
+                    children.erase(children.begin() + iter);
+            }
+            else{
+                iter++;
+            }
+        }
     }
 
-    SubChapter& getSubChapter(const size_t index) {
-        return subchapters[index];
+    Element* get(const size_t index) {
+        return children[index];
     }
-
-    void print() const {
-        std::cout << "Chapter: " << name << '\n';
-        for (const SubChapter& subchapter : subchapters)
-            subchapter.print();
-    }
-
-};
+}
 
 class Author {
 private:
@@ -122,16 +137,7 @@ public:
 
 };
 
-class TableofContent {
-private:
-    std::string something;
 
-public:
-    void print() {
-        std::cout << "Table of Content: " << something << '\n';
-    }
-
-};
 
 class Book {
 private:
@@ -171,48 +177,8 @@ public:
 };
 
 int main() {
-    Book book("This is the McBook");
-    Author author("Author McAuthor");
-
-    book.addAuthor(author);
-
-    book.createChapter("McChapter I");
-    book.createChapter("McChapter II");
-    book.createChapter("McChapter III");
-    book.createChapter("McChapter IV");
-    book.createChapter("McChapter V");
-    book.createChapter("McChapter VI");
-    book.createChapter("McChapter VII");
-    book.createChapter("McChapter VIII");
-
-    book.getChapter(0).createSubchapter("SubMcChapter I");
-    book.getChapter(0).createSubchapter("SubMcChapter II");
-    book.getChapter(0).createSubchapter("SubMcChapter III");
-
-    book.getChapter(0).getSubChapter(0).createImage("McImage I");
-    book.getChapter(0).getSubChapter(0).createImage("McImage II");
-    book.getChapter(0).getSubChapter(0).createTable("McTable I");
-    book.getChapter(0).getSubChapter(0).createTable("McTable II");
-    book.getChapter(0).getSubChapter(0).createImage("McImage III");
-    book.getChapter(0).getSubChapter(0).createParagraph("McParagraph I");
-    book.getChapter(0).getSubChapter(0).createParagraph("McParagraph II");
-    book.getChapter(0).getSubChapter(0).createTable("McTable III");
-
-    book.getChapter(1).createSubchapter("SubMcChapter I");
-    book.getChapter(1).createSubchapter("SubMcChapter II");
-    book.getChapter(1).createSubchapter("SubMcChapter III");
 
 
-    book.getChapter(2).createSubchapter("SubMcChapter I");
-    book.getChapter(2).createSubchapter("SubMcChapter II");
-    book.getChapter(2).createSubchapter("SubMcChapter III");
-
-
-    book.getChapter(4).createSubchapter("SubMcChapter I");
-    book.getChapter(4).createSubchapter("SubMcChapter II");
-    book.getChapter(4).createSubchapter("SubMcChapter III");
-
-    book.print();
 
     return 0;
 }
