@@ -24,7 +24,7 @@ public:
 
     void add(Element*) {}
     void remove(Element*) {}
-    Element* get(const size_t) {}
+    Element* get(const size_t) const {}
 
 };
 
@@ -41,7 +41,7 @@ public:
 
     void add(Element*) {}
     void remove(Element*) {}
-    Element* get(const size_t) {}
+    Element* get(const size_t) const {}
 
 };
 
@@ -58,7 +58,7 @@ public:
 
     void add(Element*) {}
     void remove(Element*) {}
-    Element* get(const size_t) {}
+    Element* get(const size_t) const {}
 
 };
 
@@ -83,6 +83,7 @@ private:
     std::vector<Element*> children;
 
 public:
+    Section() {}
     Section(const std::string& title) :title(title) {}
 
     ~Section() {        
@@ -91,7 +92,7 @@ public:
     }
 
     void print() const {
-            std::cout << "Section: " << title << '\n';
+            std::cout << title << '\n';
             
             for (const Element* element : children) {
                 if(element){
@@ -118,67 +119,74 @@ public:
         }
     }
 
-    Element* get(const size_t index) {
+    Element* get(const size_t index) const {
         return children[index];
     }
-}
+};
 
 class Author {
 private:
     std::string name;
+    std::string surname;
 
 public:
     Author () {}
-    Author(const std::string& name) : name(name) {}
+    Author(const std::string& name, const std::string& surname) : name(name), surname(surname) {}
 
     void print() const {
-        std::cout << "Author: " << name << '\n';
+        std::cout << "Author: " << name << ' ' << surname << '\n';
     }
 
 };
 
-
-
-class Book {
+class Book: public Section {
 private:
     std::string title;
-    Author author;
-    TableofContent ToC;
-    std::vector<Chapter> chapters;
+    std::vector<Author> authors;
 
 public:
+    Book(const std::string& title, const std::vector<Author> authors) : title(title), authors(authors) {} 
     Book(const std::string& title) : title(title) {}
 
-    void createChapter(const std::string& chapterName) {
-        Chapter chapter(chapterName);
-        chapters.push_back(chapter);
-    }
-
-    Chapter& getChapter(const size_t index) { 
-        return chapters[index];
-    }
-
-    void addAuthor(const Author& author) {
-        this->author = author;
-    }
-
-    void addToC(const TableofContent& ToC) {
-        this->ToC = ToC;
-    }
-
-    void print() const {
+    void printBook() const {
         std::cout << "Book title: " << title << '\n';
-        author.print();
-        for (const Chapter& chapter : chapters) {
-            chapter.print();
+        for (const Author& author : authors) {
+            author.print();
         }
     }
 
+    void addAuthor(const Author& author) {
+        authors.push_back(author);
+    }
+
+    Element* get(const size_t) {}
 };
 
 int main() {
 
+    Book karte = Book("Titlu karte");
+    Author autor1 = Author("Cel mai", "autor");
+    Author autor2 = Author("!Cel mai", "autor");
 
+    karte.addAuthor(autor1);
+    karte.addAuthor(autor2);
 
+    karte.add(new Image("Imagine"));
+    karte.add(new Paragraph("teeexxttt"));
+
+    karte.add(new Section("Cea mai sectiune 1"));
+    
+    karte.get(3)->add(new Section("Cea mai sectiune 1.1"));
+    
+    karte.get(3)->get(1)->add(new Paragraph("paragraf 1.1"));
+
+    //karte.get(3)->add(new Paragraph("paragraf 1"));
+
+    //karte.get(3)->add(new Paragraph("paragraf 1"));
+
+    
+
+    karte.printBook();
+    karte.print();
     return 0;
 }
