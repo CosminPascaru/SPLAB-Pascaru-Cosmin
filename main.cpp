@@ -1,10 +1,22 @@
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <thread>
 
+std::chrono::seconds timeout(5);
+
+struct ImageDimensions {
+    unsigned int width;
+    unsigned int height;
+};
+
+struct ImageContent {
+    std::string nothing;
+};
 
 class Element {
 public:
-    virtual void print() const = 0;
+    virtual void print() = 0;
 
     virtual void add(Element*) = 0;
     virtual void remove(Element*) = 0;
@@ -18,31 +30,72 @@ private:
 public:
     Table(const std::string& title) : title(title) {}
 
-    void print() const {
+    void print() {
         std::cout << "    Table: " << title << '\n';
     }
 
     void add(Element*) {}
     void remove(Element*) {}
     Element* get(const size_t) const {}
-
 };
 
-class Image: public Element {
+class Image {
+public:
+    virtual void display() = 0;
+};
+
+class ImageReal: public Element, Image{
 private:
-    std::string imageName;
+    std::string url;
+    ImageContent content;
+
+    void loadImage() {
+        //simulated load time
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+    }
+
+    void display() override {
+        std::cout << "    ImageReal: " << url << '\n';
+    }
 
 public:
-    Image(const std::string& imageName) : imageName(imageName) {}
+    ImageReal(const std::string& url) : url(url) {
+        loadImage();
+    }
 
-    void print() const {
-        std::cout << "    Image: " << imageName << '\n';
+    void print() {
+        display();
     }
 
     void add(Element*) {}
     void remove(Element*) {}
     Element* get(const size_t) const {}
+};
 
+class ImageProxy: public Element, Image {
+private:
+    std::string url;
+    ImageDimensions dimensions;
+    ImageReal* realImage;
+
+    void display() override {
+        if (realImage == nullptr) {
+            realImage = new ImageReal(url);
+        }
+        realImage->print();
+    }
+
+public:
+    ImageProxy(const std::string& url) : url(url), realImage(nullptr){}
+
+    void print() {
+        display();
+    }
+
+    void add(Element*) {}
+    void remove(Element*) {}
+    Element* get(const size_t) const {}
+    
 };
 
 class Paragraph: public Element {
@@ -52,7 +105,7 @@ private:
 public:
     Paragraph(const std::string& text) : text(text) {}
 
-    void print() const {
+    void print() {
         std::cout << "    Paragraph: " << text << '\n';
     }
 
@@ -67,7 +120,7 @@ private:
     std::string something;
 
 public:
-    void print() const {
+    void print() {
         std::cout << "Table of Content: " << something << '\n';
     }
 
@@ -91,10 +144,10 @@ public:
             delete element;
     }
 
-    void print() const {
+    void print() {
             std::cout << title << '\n';
             
-            for (const Element* element : children) {
+            for (Element* element : children) {
                 if(element){
                     element->print();
                 }
@@ -158,35 +211,23 @@ public:
     void addAuthor(const Author& author) {
         authors.push_back(author);
     }
-
-    Element* get(const size_t) {}
 };
 
 int main() {
 
     Book karte = Book("Titlu karte");
     Author autor1 = Author("Cel mai", "autor");
-    Author autor2 = Author("!Cel mai", "autor");
 
     karte.addAuthor(autor1);
-    karte.addAuthor(autor2);
-
-    karte.add(new Image("Imagine"));
-    karte.add(new Paragraph("teeexxttt"));
-
+    
     karte.add(new Section("Cea mai sectiune 1"));
-    
-    karte.get(3)->add(new Section("Cea mai sectiune 1.1"));
-    
-    karte.get(3)->get(1)->add(new Paragraph("paragraf 1.1"));
+    karte.add(new Section("Cea mai sectiune 2"));
 
-    //karte.get(3)->add(new Paragraph("paragraf 1"));
+    karte.get(0)->add(new ImageProxy("Imagine1 sec1"));
 
-    //karte.get(3)->add(new Paragraph("paragraf 1"));
+    karte.get(1)->add(new ImageProxy("Imagine1 sec2"));
+    karte.get(1)->add(new ImageProxy("Imagine2 sec2"));
 
-    
-
-    karte.printBook();
-    karte.print();
+    karte.get(0)->print();
     return 0;
 }
