@@ -98,15 +98,50 @@ public:
     
 };
 
+class AlignmentStrategy {
+public:
+    virtual void display(std::string& text) = 0;
+    virtual void align(std::string& text) = 0;
+};
+
+class AlignLeft: public AlignmentStrategy {
+public:
+    void display (std::string& text) {
+        //align(text); 
+        std::cout << "    Aligned to the left: " << text << '\n';
+    }
+
+    void align(std::string& text) override {
+        //some method to align the text :)
+    }
+};
+
+class AlignRight: public AlignmentStrategy {
+public:
+    void display (std::string& text) {
+        //align(text);   
+        std::cout << "    Aligned to the right: " << text << '\n';
+    }
+
+    void align(std::string& text) override {
+        //some method to align the text :)
+    }
+};
+
 class Paragraph: public Element {
 private:
     std::string text;
+    AlignmentStrategy* alignmentStrategy;
 
 public:
-    Paragraph(const std::string& text) : text(text) {}
+    Paragraph(const std::string& text) : text(text), alignmentStrategy(new AlignLeft()){}
 
     void print() {
-        std::cout << "    Paragraph: " << text << '\n';
+        alignmentStrategy->display(text);
+    }
+
+    void setAlignmentStrategy(AlignmentStrategy* strategy) {
+        alignmentStrategy = strategy;
     }
 
     void add(Element*) {}
@@ -214,7 +249,6 @@ public:
 };
 
 int main() {
-
     Book karte = Book("Titlu karte");
     Author autor1 = Author("Cel mai", "autor");
 
@@ -224,6 +258,10 @@ int main() {
     karte.add(new Section("Cea mai sectiune 2"));
 
     karte.get(0)->add(new ImageProxy("Imagine1 sec1"));
+    karte.get(0)->add(new Paragraph("Ana nu are mere"));
+    Paragraph *paragraf = new Paragraph("Probabil ca ana are mere");
+    paragraf->setAlignmentStrategy(new AlignRight);
+    karte.get(0)->add(paragraf);
 
     karte.get(1)->add(new ImageProxy("Imagine1 sec2"));
     karte.get(1)->add(new ImageProxy("Imagine2 sec2"));

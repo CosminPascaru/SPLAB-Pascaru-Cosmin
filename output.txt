@@ -1,30 +1,4 @@
-Book title: This is the McBook
-Author: Author McAuthor
-Chapter: McChapter I
-  Subchapter: SubMcChapter I
-    Image: McImage I
-    Image: McImage II
-    Table: McTable I
-    Table: McTable II
-    Image: McImage III
-    Paragraph: McParagraph I
-    Paragraph: McParagraph II
-    Table: McTable III
-  Subchapter: SubMcChapter II
-  Subchapter: SubMcChapter III
-Chapter: McChapter II
-  Subchapter: SubMcChapter I
-  Subchapter: SubMcChapter II
-  Subchapter: SubMcChapter III
-Chapter: McChapter III
-  Subchapter: SubMcChapter I
-  Subchapter: SubMcChapter II
-  Subchapter: SubMcChapter III
-Chapter: McChapter IV
-Chapter: McChapter V
-  Subchapter: SubMcChapter I
-  Subchapter: SubMcChapter II
-  Subchapter: SubMcChapter III
-Chapter: McChapter VI
-Chapter: McChapter VII
-Chapter: McChapter VIII
+Cea mai sectiune 1
+    ImageReal: Imagine1 sec1
+    Aligned to the left: Ana nu are mere
+    Aligned to the right: Probabil ca ana are mere
