@@ -1,4 +1,0 @@
-Cea mai sectiune 1
-    ImageReal: Imagine1 sec1
-    Aligned to the left: Ana nu are mere
-    Aligned to the right: Probabil ca ana are mere
