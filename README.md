@@ -1,7 +1,11 @@
 # SPLAB-Pascaru-Cosmin
-am reusit si eu sa fac merge abea la lab5 :)
+cred ca am terminat :)
 
-am facut chestia cu alinierea
-treaba cu incarcarea de imagini care chiar functioneaza nu am mai facuto, in principal pentru ca era prea multa munca sa stau acum sa fac makefiles ca sa linkuiesc librarii 
+ar trebui sa functioneze tot 
 
-daca se poate, as vrea feedback si la cat de ok e codul overall
+mam complicat MULT PREA MULT. in total sunt 560 linii de cod.
+am profitat de aceasta tema ca sa mai exersez c++, a fost cea mai interesanta tema pentru mine in acest semestru
+
+am incercat sa scriu codul cat de bine am putut. poate ma voi folosi de acest repo la vreun interviu.
+
+daca se poate, as vrea feedback la cat de ok e codul overall
