@@ -4,7 +4,9 @@ cred ca am terminat :)
 ar trebui sa functioneze tot 
 
 mam complicat MULT PREA MULT. in total sunt 560 linii de cod.
+
 am profitat de aceasta tema ca sa mai exersez c++, a fost cea mai interesanta tema pentru mine in acest semestru
+
 am invatat cat de cat cum sa folosesc git din terminal :)
 
 executabilul e builduit pt linux, deci trebe recompilat
